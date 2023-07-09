@@ -13,11 +13,20 @@ require("dotenv").config();
 const cookieParser = require("cookie-parser");
 
 const JWT_OPTIONS = {};
+const currentEnv = process.env.ENV;
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cookieParser());
 
-app.use(cors());
+const getAllowedOrigins = env => {
+  if (env === "PROD") {
+    return ["https://3ds-flex.io", "http://3ds-flex.io", "www.3ds-flex.io"];
+  } else {
+    return ["http://localhost:3000"];
+  }
+};
+
+app.use(cors({ origin: getAllowedOrigins(currentEnv) }));
 
 Date.prototype.addHours = function (h) {
   this.setHours(this.getHours() + h);
@@ -38,7 +47,6 @@ router.post("/token", (req, res) => {
     iat,
     iss,
     OrgUnitId,
-    ReturnUrl,
   };
   console.log("still running");
 
@@ -61,8 +69,7 @@ router.post("/token2", (req, res) => {
   const MAC = "55dd3cbe-23a6-456a-84dc-71cdfe5ff0b8";
   const Payload = {
     Payload: req.body.Payload,
-    ACSUrl:
-      "https://0merchantacsstag.cardinalcommerce.com/MerchantACSWeb/creq.jsp",
+    ACSUrl: req.body.acsURL,
     TransactionId: req.body.TransactionId,
   };
 
@@ -106,8 +113,8 @@ router.post("/auth-request", async (req, res) => {
 });
 
 router.post("/after-challenge", async (req, res) => {
-  // res.send({ response: req.body });
-  // can return HTML with a script to call out to iFrame's parent on page load using messsage API
+  // endpoint called by Cardinal after shopper completes challenge
+  // endpoint returns HTML with a script to call out to iFrame's parent using messsage API
   console.dir(req.body);
   res.set("Content-Type", "text/html");
   res.send(
