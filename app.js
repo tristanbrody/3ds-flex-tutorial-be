@@ -28,7 +28,7 @@ const getAllowedOrigins = currentEnv => {
 
 app.use(cors({ origin: getAllowedOrigins(currentEnv) }));
 
-app.use((res, req, next) => {
+app.use((req, res, next) => {
   res.set({
     "Access-Control-Allow-Origin": getAllowedOrigins(currentEnv),
     Vary: "Origin",
@@ -59,10 +59,6 @@ router.post("/token", (req, res) => {
   console.log("still running");
 
   const token = jwt.sign(payload, MAC, JWT_OPTIONS);
-  res.set({
-    "Access-Control-Allow-Origin": getAllowedOrigins(currentEnv),
-    Vary: "Origin",
-  });
   return res.json({ token });
 });
 
