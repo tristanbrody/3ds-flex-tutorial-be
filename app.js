@@ -28,6 +28,14 @@ const getAllowedOrigins = currentEnv => {
 
 app.use(cors({ origin: getAllowedOrigins(currentEnv) }));
 
+app.use((res, req, next) => {
+  res.set({
+    "Access-Control-Allow-Origin": getAllowedOrigins(currentEnv),
+    Vary: "Origin",
+  });
+  next();
+});
+
 Date.prototype.addHours = function (h) {
   this.setHours(this.getHours() + h);
   return this;
@@ -91,10 +99,6 @@ router.post("/token2", (req, res) => {
     ObjectifyPayload: true,
   };
   const token = jwt.sign(payload, MAC, {});
-  res.set({
-    "Access-Control-Allow-Origin": getAllowedOrigins(currentEnv),
-    Vary: "Origin",
-  });
   return res.json({ token });
 });
 
@@ -119,10 +123,6 @@ router.post("/auth-request", async (req, res) => {
     )
     .then(d => d);
   console.dir(authRes);
-  res.set({
-    "Access-Control-Allow-Origin": getAllowedOrigins(currentEnv),
-    Vary: "Origin",
-  });
   res.send({ res: authRes.data, cookie: authRes.headers["set-cookie"][0] });
 });
 
@@ -131,10 +131,6 @@ router.post("/after-challenge", async (req, res) => {
   // endpoint returns HTML with a script to call out to iFrame's parent using messsage API
   console.dir(req.body);
   res.set("Content-Type", "text/html");
-  res.set({
-    "Access-Control-Allow-Origin": getAllowedOrigins(currentEnv),
-    Vary: "Origin",
-  });
   res.send(
     Buffer.from(
       "<h2>Received response from Cardinal indicating completion of challenge</h2><script>window.parent.postMessage('Challenge completed', '*');</script>"
@@ -165,10 +161,6 @@ router.post("/second-auth-request", async (req, res) => {
     )
     .then(d => d);
   console.log(secondAuthRes.data);
-  res.set({
-    "Access-Control-Allow-Origin": getAllowedOrigins(currentEnv),
-    Vary: "Origin",
-  });
   res.send({ res: secondAuthRes.data });
 });
 
