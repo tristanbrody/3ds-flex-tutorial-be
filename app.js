@@ -20,7 +20,7 @@ app.use(cookieParser());
 
 const getAllowedOrigins = currentEnv => {
   if (currentEnv === "PRODUCTION") {
-    return ["https://3ds-flex.io", "http://3ds-flex.io", "www.3ds-flex.io"];
+    return ["https://3ds-flex.io"];
   } else {
     return ["http://localhost:3000"];
   }
