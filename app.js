@@ -78,12 +78,19 @@ router.post("/token2", (req, res) => {
   const iss = "61654c80424ec551b72be555";
   const OrgUnitId = "61654c80424ec551b72be554";
   const MAC = "55dd3cbe-23a6-456a-84dc-71cdfe5ff0b8";
-  const Payload = {
-    Payload: req.body.Payload,
-    ACSUrl: req.body.acsURL,
-    TransactionId: req.body.TransactionId,
-  };
 
+  // "Payload": "{\"ACSUrl\": \"https://merchantacsstag.cardinalcommerce.com/MerchantACSWeb/...\" ,\"Payload\": \"eNpVUV1PwjAUfe4DGhKoaw==\", \"TransactionId\": \"sRMPWCQoQrEiVxehTnu0\" }",
+
+  const _Payload = req.body.Payload.replace(/\s+/g, "");
+  const ACSUrl = req.body.acsURL.replace(/\s+/g, "");
+  const TransactionId = req.body.TransactionId.replace(/\s+/g, "");
+
+  const Payload = {
+    Payload: _Payload,
+    ACSUrl,
+    TransactionId,
+  };
+  console.log(Payload);
   const payload = {
     jti,
     iat,
