@@ -70,7 +70,7 @@ router.post("/token2", (req, res) => {
   const ReturnUrl =
     process.env.ENV === "TEST"
       ? "http://localhost:3001/after-challenge"
-      : "https://3ds-flex.io/after-challenge";
+      : "https://events.3ds-flex.io/after-challenge";
   const ReferenceId = req.body.ReferenceId;
   console.log(req.body);
 
