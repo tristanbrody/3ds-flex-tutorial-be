@@ -20,7 +20,7 @@ app.use(cookieParser());
 
 const getAllowedOrigins = currentEnv => {
   if (currentEnv === "PRODUCTION") {
-    return req.get('origin');
+    return ['*'];
   } else {
     return ["http://localhost:3000"];
   }
